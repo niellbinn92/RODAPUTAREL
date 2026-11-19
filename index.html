@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lucky Spin - Mystery Reward</title>
+    <title>Lucky Spin - Redeem Ticket</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -12,10 +12,10 @@
             --card-bg: #121216;
             --primary: #8b5cf6;
             --primary-glow: rgba(139, 92, 246, 0.4);
-            --accent: #a855f7;
             --text-main: #f4f4f5;
             --text-muted: #a1a1aa;
             --border-color: rgba(255, 255, 255, 0.08);
+            --danger: #f87171;
         }
 
         * {
@@ -29,7 +29,7 @@
         body {
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.16) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
             color: var(--text-main);
             min-height: 100vh;
@@ -47,9 +47,9 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 28px 20px;
+            padding: 26px 20px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
             position: relative;
         }
 
@@ -58,19 +58,19 @@
             background: rgba(139, 92, 246, 0.15);
             color: #c4b5fd;
             border: 1px solid rgba(139, 92, 246, 0.3);
-            padding: 6px 14px;
+            padding: 5px 14px;
             border-radius: 99px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            letter-spacing: 0.6px;
+            margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         h1 {
             font-size: 24px;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             background: linear-gradient(to right, #ffffff, #c4b5fd);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -79,21 +79,91 @@
         p.subtitle {
             font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 28px;
+            margin-bottom: 22px;
+        }
+
+        /* Ticket Input Box */
+        .ticket-box {
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .ticket-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #d4d4d8;
+            margin-bottom: 8px;
+        }
+
+        .ticket-input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ticket-input {
+            flex: 1;
+            background: #09090b;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .ticket-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+        }
+
+        .ticket-input::placeholder {
+            color: #52525b;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: none;
+        }
+
+        .paste-btn {
+            background: rgba(139, 92, 246, 0.14);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c4b5fd;
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .paste-btn:hover {
+            background: rgba(139, 92, 246, 0.25);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 7px;
+            min-height: 16px;
+            font-weight: 600;
         }
 
         /* Wheel Container */
         .wheel-wrapper {
             position: relative;
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 28px auto;
+            width: 290px;
+            height: 290px;
+            margin: 0 auto 22px auto;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Outer Metallic/Neon Ring */
         .wheel-outer-ring {
             position: absolute;
             inset: -10px;
@@ -106,7 +176,6 @@
             z-index: 1;
         }
 
-        /* Pointer / Jarum Penunjuk */
         .pointer {
             position: absolute;
             top: -18px;
@@ -130,18 +199,17 @@
             height: 100%;
         }
 
-        /* Center Spin Button */
         .spin-btn {
             position: absolute;
             z-index: 15;
-            width: 68px;
-            height: 68px;
+            width: 66px;
+            height: 66px;
             border-radius: 50%;
             background: linear-gradient(135deg, #9333ea, #6d28d9);
             border: 4px solid #18181b;
             color: white;
             font-weight: 800;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 1px;
             cursor: pointer;
             box-shadow: 0 0 20px rgba(139, 92, 246, 0.6), inset 0 2px 4px rgba(255,255,255,0.3);
@@ -167,16 +235,15 @@
             box-shadow: none;
         }
 
-        /* Info Box */
         .status-bar {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 12px 16px;
+            padding: 11px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .status-bar span {
@@ -192,7 +259,7 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.82);
             backdrop-filter: blur(6px);
             display: flex;
             align-items: center;
@@ -219,7 +286,7 @@
             text-align: center;
             transform: scale(0.9);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.85);
         }
 
         .modal-overlay.active .modal-card {
@@ -279,14 +346,23 @@
 <body>
 
     <div class="container">
-        <div class="badge">Daily Event</div>
+        <div class="badge">Ticket Event</div>
         <h1>Spin & Win Key</h1>
-        <p class="subtitle">Putar roda dan menangkan akses key gratis</p>
+        <p class="subtitle">Masukkan kode tiket lalu tekan SPIN</p>
+
+        <!-- Input Kode Tiket -->
+        <div class="ticket-box">
+            <label class="ticket-label" for="ticketInput">Kode Tiket</label>
+            <div class="ticket-input-group">
+                <input type="text" id="ticketInput" class="ticket-input" placeholder="Contoh: NIELL-001" autocomplete="off">
+                <button type="button" class="paste-btn" id="pasteBtn">Tempel</button>
+            </div>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
 
         <div class="wheel-wrapper">
             <div class="wheel-outer-ring"></div>
             
-            <!-- Jarum Penunjuk -->
             <div class="pointer" id="pointer">
                 <svg viewBox="0 0 36 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M18 42L2 14C0.5 11.5 2.5 8 5.5 8H30.5C33.5 8 35.5 11.5 34 14L18 42Z" fill="#F4F4F5"/>
@@ -299,8 +375,8 @@
         </div>
 
         <div class="status-bar">
-            <span>Kesempatan Tersisa</span>
-            <strong id="spinCount">1x Putaran</strong>
+            <span>Status Sistem</span>
+            <strong id="systemStatus">Siap Digunakan</strong>
         </div>
     </div>
 
@@ -310,30 +386,33 @@
             <div class="modal-icon" id="modalIcon">🎉</div>
             <div class="modal-title" id="modalTitle">Selamat!</div>
             <div class="modal-desc" id="modalDesc">Kamu mendapatkan hadiah spesial.</div>
-            <div class="key-box" id="keyBox">NIELL-FREE-XXXX-XXXX</div>
-            <button class="modal-btn" id="closeModalBtn">Tutup & Klaim</button>
+            <div class="key-box" id="keyBox"></div>
+            <button class="modal-btn" id="closeModalBtn">Tutup</button>
         </div>
     </div>
 
     <script>
-        // --- KONFIGURASI HADIAH ---
-        // weight: semakin besar angka, semakin sering muncul (untuk simulasi frontend)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyJli1slrxsldxQx3GpCryEP2hrXIpN_dSt9p7JoCDZz1IzE5dm_lc6BB2PAGQXjSdV5g/exec';
+
+        // Urutan segmen WAJIB sama dengan yang ada di Google Apps Script
         const segments = [
-            { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk', weight: 35 },
-            { label: 'KEY 1 HARI', color: '#6d28d9', textColor: '#ffffff', type: 'win', keyDemo: 'KEY-1D-9823-VIP', weight: 15 },
-            { label: 'COBA LAGI', color: '#27272a', textColor: '#a1a1aa', type: 'retry', weight: 20 },
-            { label: 'KEY 3 HARI', color: '#8b5cf6', textColor: '#ffffff', type: 'win', keyDemo: 'KEY-3D-7741-PRO', weight: 5 },
-            { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk', weight: 20 },
-            { label: 'DISKON 50%', color: '#4c1d95', textColor: '#e9d5ff', type: 'win', keyDemo: 'VOUCHER-HEMAT50', weight: 5 }
+            { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk' },
+            { label: 'KEY 1 HARI', color: '#6d28d9', textColor: '#ffffff', type: 'win' },
+            { label: 'COBA LAGI', color: '#27272a', textColor: '#a1a1aa', type: 'retry' },
+            { label: 'KEY 3 HARI', color: '#8b5cf6', textColor: '#ffffff', type: 'win' },
+            { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk' },
+            { label: 'DISKON 50%', color: '#4c1d95', textColor: '#e9d5ff', type: 'win' }
         ];
 
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
         const spinBtn = document.getElementById('spinBtn');
         const pointer = document.getElementById('pointer');
-        const spinCountEl = document.getElementById('spinCount');
+        const ticketInput = document.getElementById('ticketInput');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        const systemStatus = document.getElementById('systemStatus');
 
-        // Modal Elements
         const modal = document.getElementById('resultModal');
         const modalIcon = document.getElementById('modalIcon');
         const modalTitle = document.getElementById('modalTitle');
@@ -343,11 +422,9 @@
 
         const numSegments = segments.length;
         const arcSize = (2 * Math.PI) / numSegments;
-        let currentRotation = 0; // dalam radian
+        let currentRotation = 0;
         let isSpinning = false;
-        let spinsLeft = 1;
 
-        // Audio Context untuk efek suara detak roda (tanpa file mp3 eksternal)
         let audioCtx = null;
         function playTickSound() {
             try {
@@ -366,7 +443,6 @@
             } catch (e) {}
         }
 
-        // Gambar Roda
         function drawWheel() {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
@@ -377,7 +453,6 @@
             for (let i = 0; i < numSegments; i++) {
                 const angle = currentRotation + i * arcSize;
                 
-                // Gambar potongan segmen
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + arcSize);
@@ -385,12 +460,10 @@
                 ctx.fillStyle = segments[i].color;
                 ctx.fill();
 
-                // Garis pemisah antar segmen
                 ctx.lineWidth = 3;
                 ctx.strokeStyle = '#09090b';
                 ctx.stroke();
 
-                // Gambar Teks
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(angle + arcSize / 2);
@@ -402,41 +475,59 @@
             }
         }
 
-        // Pilih pemenang berdasarkan bobot (weight)
-        function getWeightedRandomIndex() {
-            const totalWeight = segments.reduce((sum, item) => sum + item.weight, 0);
-            let random = Math.random() * totalWeight;
-            for (let i = 0; i < segments.length; i++) {
-                if (random < segments[i].weight) return i;
-                random -= segments[i].weight;
-            }
-            return 0;
-        }
+        async function requestSpin() {
+            if (isSpinning) return;
 
-        // Animasi Putaran
-        function spinWheel() {
-            if (isSpinning || spinsLeft <= 0) return;
-            
+            const code = ticketInput.value.trim().toUpperCase();
+            errorMsg.textContent = '';
+
+            if (!code) {
+                errorMsg.textContent = 'Masukkan kode tiket terlebih dahulu!';
+                ticketInput.focus();
+                return;
+            }
+
             isSpinning = true;
             spinBtn.disabled = true;
+            ticketInput.disabled = true;
+            spinBtn.textContent = '...';
+            systemStatus.textContent = 'Memeriksa Tiket...';
 
-            const winningIndex = getWeightedRandomIndex();
-            
-            // Hitung sudut target agar berhenti tepat di tengah segmen pemenang
-            // Jarum berada di posisi atas (-Math.PI / 2 atau 270 derajat)
-            const extraSpins = 6 + Math.floor(Math.random() * 3); // 6-8 putaran penuh
+            try {
+                // Menggunakan text/plain agar terhindar dari masalah CORS preflight pada Apps Script
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ ticket: code })
+                });
+
+                const result = await response.json();
+
+                if (result.status !== 'success') {
+                    errorMsg.textContent = result.message || 'Tiket tidak valid.';
+                    resetControls('Siap Digunakan');
+                    return;
+                }
+
+                systemStatus.textContent = 'Memutar Roda...';
+                animateWheelToIndex(result.winningIndex, result.prize, result.key);
+
+            } catch (err) {
+                errorMsg.textContent = 'Gagal terhubung ke server. Coba lagi.';
+                resetControls('Siap Digunakan');
+            }
+        }
+
+        function animateWheelToIndex(winningIndex, prize, wonKey) {
+            const extraSpins = 6 + Math.floor(Math.random() * 3);
             const segmentCenterAngle = winningIndex * arcSize + arcSize / 2;
-            
-            // Kalkulasi target rotasi absolut
             const targetAngle = (extraSpins * 2 * Math.PI) + (-Math.PI / 2 - segmentCenterAngle);
-            
-            // Tambahkan variasi acak sedikit di dalam segmen agar terlihat natural
             const randomOffset = (Math.random() - 0.5) * (arcSize * 0.6);
             const finalRotation = targetAngle + randomOffset;
 
             const startRotation = currentRotation % (2 * Math.PI);
             const totalChange = finalRotation - startRotation;
-            const duration = 5000; // 5 detik
+            const duration = 5000;
             let startTime = null;
             let lastSegmentPassed = -1;
 
@@ -445,13 +536,11 @@
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // Easing: cubic-out (cepat di awal, melambat halus di akhir)
                 const easeOut = 1 - Math.pow(1 - progress, 4);
                 currentRotation = startRotation + totalChange * easeOut;
 
                 drawWheel();
 
-                // Deteksi pergantian segmen di jarum untuk bunyi tick & goyangan jarum
                 const normalizedAngle = (currentRotation + Math.PI / 2) % (2 * Math.PI);
                 const positiveAngle = normalizedAngle < 0 ? normalizedAngle + 2 * Math.PI : normalizedAngle;
                 const currentSegment = Math.floor((2 * Math.PI - positiveAngle) / arcSize) % numSegments;
@@ -468,49 +557,54 @@
                 if (progress < 1) {
                     requestAnimationFrame(animate);
                 } else {
-                    isSpinning = false;
-                    handleResult(segments[winningIndex]);
+                    showResultModal(prize, wonKey);
                 }
             }
 
             requestAnimationFrame(animate);
         }
 
-        // Tampilkan Hasil
-        function handleResult(prize) {
+        function showResultModal(prize, wonKey) {
             if (prize.type === 'retry') {
                 modalIcon.textContent = '🔄';
                 modalTitle.textContent = 'Coba Lagi!';
-                modalDesc.textContent = 'Belum beruntung, tapi kamu dapat kesempatan putar gratis 1x lagi!';
+                modalDesc.textContent = 'Tiket masih aktif! Kamu bisa memutar roda ini 1x lagi.';
                 keyBox.style.display = 'none';
                 closeModalBtn.textContent = 'Putar Lagi';
-                spinBtn.disabled = false;
-            } else {
-                spinsLeft--;
-                spinCountEl.textContent = `${spinsLeft}x Putaran`;
+                resetControls('Tiket Masih Aktif');
+            } else if (prize.type === 'win') {
+                modalIcon.textContent = '🎉';
+                modalTitle.textContent = `Dapat ${prize.label}!`;
+                modalDesc.textContent = wonKey
+                    ? 'Selamat! Salin kode hadiah di bawah ini sebelum menutup:'
+                    : 'Selamat! Hadiah berhasil dicatat pada tiketmu.';
 
-                if (prize.type === 'win') {
-                    modalIcon.textContent = '🎉';
-                    modalTitle.textContent = `Dapat ${prize.label}!`;
-                    modalDesc.textContent = 'Salin kode key di bawah ini sebelum menutup jendela:';
-                    keyBox.textContent = prize.keyDemo;
+                if (wonKey) {
+                    keyBox.textContent = wonKey;
                     keyBox.style.display = 'block';
                     closeModalBtn.textContent = 'Salin & Tutup';
-                    
-                    // Efek Confetti
-                    confetti({
-                        particleCount: 80,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#8b5cf6', '#c4b5fd', '#ffffff']
-                    });
                 } else {
-                    modalIcon.textContent = '💀';
-                    modalTitle.textContent = 'Yah, Zonk!';
-                    modalDesc.textContent = 'Belum rezeki hari ini, Bos. Coba lagi di kesempatan berikutnya!';
                     keyBox.style.display = 'none';
-                    closeModalBtn.textContent = 'Oke, Mengerti';
+                    closeModalBtn.textContent = 'Tutup';
                 }
+
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#8b5cf6', '#c4b5fd', '#ffffff']
+                });
+
+                ticketInput.value = '';
+                resetControls('Tiket Terpakai');
+            } else {
+                modalIcon.textContent = '💀';
+                modalTitle.textContent = 'Yah, Zonk!';
+                modalDesc.textContent = 'Belum beruntung kali ini. Gunakan tiket lain untuk mencoba lagi!';
+                keyBox.style.display = 'none';
+                closeModalBtn.textContent = 'Oke, Mengerti';
+                ticketInput.value = '';
+                resetControls('Tiket Terpakai');
             }
 
             setTimeout(() => {
@@ -518,18 +612,39 @@
             }, 300);
         }
 
-        // Event Listeners
-        spinBtn.addEventListener('click', spinWheel);
+        function resetControls(statusText) {
+            isSpinning = false;
+            spinBtn.disabled = false;
+            ticketInput.disabled = false;
+            spinBtn.textContent = 'SPIN';
+            systemStatus.textContent = statusText;
+        }
+
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    ticketInput.value = text.trim().toUpperCase();
+                    errorMsg.textContent = '';
+                }
+            } catch (e) {
+                errorMsg.textContent = 'Tekan & tahan kolom input untuk menempel kode.';
+            }
+        });
+
+        spinBtn.addEventListener('click', requestSpin);
+
+        ticketInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') requestSpin();
+        });
 
         closeModalBtn.addEventListener('click', () => {
-            if (keyBox.style.display === 'block') {
-                navigator.clipboard.writeText(keyBox.textContent);
-                alert('Key berhasil disalin ke clipboard!');
+            if (keyBox.style.display === 'block' && keyBox.textContent) {
+                navigator.clipboard?.writeText(keyBox.textContent).catch(() => {});
             }
             modal.classList.remove('active');
         });
 
-        // Gambar roda pertama kali saat halaman dimuat
         drawWheel();
     </script>
 </body>
