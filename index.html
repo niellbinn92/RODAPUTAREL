@@ -255,7 +255,7 @@
             font-weight: 700;
         }
 
-        /* Modal Result */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -280,22 +280,46 @@
             background: #16161c;
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 24px;
-            padding: 28px 24px;
+            padding: 26px 22px;
             width: 100%;
             max-width: 350px;
             text-align: center;
-            transform: scale(0.9);
+            transform: scale(0.92);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 20px 40px rgba(0,0,0,0.85);
+            position: relative;
         }
 
         .modal-overlay.active .modal-card {
             transform: scale(1);
         }
 
+        .modal-close-x {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
+            color: #a1a1aa;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close-x:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         .modal-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 44px;
+            margin-bottom: 10px;
         }
 
         .modal-title {
@@ -308,7 +332,51 @@
             font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 18px;
-            line-height: 1.5;
+            line-height: 1.55;
+        }
+
+        .wa-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .wa-feat-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 9px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #e4e4e7;
+        }
+
+        .wa-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            text-decoration: none;
+            background: linear-gradient(135deg, #9333ea, #6d28d9);
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 13px;
+            margin-bottom: 8px;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.35);
+        }
+
+        .wa-skip-btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: #a1a1aa;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
         }
 
         .key-box {
@@ -380,14 +448,36 @@
         </div>
     </div>
 
-    <!-- Modal Hasil -->
+    <!-- Modal Welcome / Saluran WhatsApp -->
+    <div class="modal-overlay active" id="welcomeModal">
+        <div class="modal-card">
+            <button type="button" class="modal-close-x" id="closeWelcomeX" aria-label="Tutup">✕</button>
+            <div class="badge">Official Channel</div>
+            <div class="modal-title">Gabung Saluran WhatsApp</div>
+            <div class="modal-desc">
+                Dapatkan info restok key, event tiket gratis, dan update terbaru langsung dari saluran resmi.
+            </div>
+            <div class="wa-features">
+                <div class="wa-feat-item">⚡ Update Terbaru</div>
+                <div class="wa-feat-item">🎁 Info Event & Key</div>
+                <div class="wa-feat-item">🛡️ Info Resmi</div>
+                <div class="wa-feat-item">🔥 Promo Spesial</div>
+            </div>
+            <a href="https://whatsapp.com/channel/0029VbCXLJx9hXF9QRZdRr12" target="_blank" rel="noopener noreferrer" class="wa-btn">
+                Gabung Saluran Sekarang →
+            </a>
+            <button type="button" class="wa-skip-btn" id="closeWelcomeBtn">Lanjut ke Spin</button>
+        </div>
+    </div>
+
+    <!-- Modal Hasil Spin -->
     <div class="modal-overlay" id="resultModal">
         <div class="modal-card">
             <div class="modal-icon" id="modalIcon">🎉</div>
             <div class="modal-title" id="modalTitle">Selamat!</div>
             <div class="modal-desc" id="modalDesc">Kamu mendapatkan hadiah spesial.</div>
             <div class="key-box" id="keyBox"></div>
-            <button class="modal-btn" id="closeModalBtn">Tutup</button>
+            <button type="button" class="modal-btn" id="closeModalBtn">Tutup</button>
         </div>
     </div>
 
@@ -401,7 +491,7 @@
             { label: 'COBA LAGI', color: '#27272a', textColor: '#a1a1aa', type: 'retry' },
             { label: 'KEY 3 HARI', color: '#8b5cf6', textColor: '#ffffff', type: 'win' },
             { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk' },
-            { label: 'DISKON 50%', color: '#4c1d95', textColor: '#e9d5ff', type: 'win' }
+            { label: 'COBA LAGI', color: '#4c1d95', textColor: '#e9d5ff', type: 'retry' }
         ];
 
         const canvas = document.getElementById('wheelCanvas');
@@ -412,6 +502,10 @@
         const pasteBtn = document.getElementById('pasteBtn');
         const errorMsg = document.getElementById('errorMsg');
         const systemStatus = document.getElementById('systemStatus');
+
+        const welcomeModal = document.getElementById('welcomeModal');
+        const closeWelcomeX = document.getElementById('closeWelcomeX');
+        const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
 
         const modal = document.getElementById('resultModal');
         const modalIcon = document.getElementById('modalIcon');
@@ -424,6 +518,13 @@
         const arcSize = (2 * Math.PI) / numSegments;
         let currentRotation = 0;
         let isSpinning = false;
+
+        function closeWelcomeModal() {
+            welcomeModal.classList.remove('active');
+        }
+
+        closeWelcomeX.addEventListener('click', closeWelcomeModal);
+        closeWelcomeBtn.addEventListener('click', closeWelcomeModal);
 
         let audioCtx = null;
         function playTickSound() {
@@ -494,7 +595,6 @@
             systemStatus.textContent = 'Memeriksa Tiket...';
 
             try {
-                // Menggunakan text/plain agar terhindar dari masalah CORS preflight pada Apps Script
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
