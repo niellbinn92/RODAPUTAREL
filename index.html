@@ -491,7 +491,8 @@
             { label: 'COBA LAGI', color: '#27272a', textColor: '#a1a1aa', type: 'retry' },
             { label: 'KEY 3 HARI', color: '#8b5cf6', textColor: '#ffffff', type: 'win' },
             { label: 'ZONK', color: '#18181b', textColor: '#71717a', type: 'zonk' },
-            { label: 'COBA LAGI', color: '#4c1d95', textColor: '#e9d5ff', type: 'retry' }
+            { label: 'COBA LAGI', color: '#4c1d95', textColor: '#e9d5ff', type: 'retry' },
+            { label: 'AKUN RESELLER', color: '#7e22ce', textColor: '#f3e8ff', type: 'win' }
         ];
 
         const canvas = document.getElementById('wheelCanvas');
@@ -570,8 +571,9 @@
                 ctx.rotate(angle + arcSize / 2);
                 ctx.textAlign = 'right';
                 ctx.fillStyle = segments[i].textColor;
-                ctx.font = '800 24px "Plus Jakarta Sans", sans-serif';
-                ctx.fillText(segments[i].label, radius - 32, 8);
+                const fontSize = segments[i].label.length > 11 ? 18 : 21;
+                ctx.font = `800 ${fontSize}px "Plus Jakarta Sans", sans-serif`;
+                ctx.fillText(segments[i].label, radius - 26, 6);
                 ctx.restore();
             }
         }
